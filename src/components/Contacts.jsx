@@ -63,7 +63,7 @@ function UsersList() {
   return (
 
     <div className="contacts">
-      <div>Contacts</div>
+      <header className="contactsHeader">Contacts</header>
       <input className="contactsSearch" type="text" onInput={handleSearch} />
 
       <div

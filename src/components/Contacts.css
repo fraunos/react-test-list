@@ -1,10 +1,59 @@
+/* TODO use scss?? */
 .contacts {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   
 }
 
+.contactsHeader{
+  background: linear-gradient(90deg, #5fb0c1 0%, #21a58e 100%); 
+  font-weight: bold;  
+  color: white;
+  text-align: center;
+  padding: 1em;
+}
+
+.contactsSearch{
+  padding: 1em;
+}
+
 .usersList{
+  display: grid;
+  gap: .5em;
+  padding: 1em;
   overflow-y: auto;
+}
+
+.userItem label {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 1em;
+}
+.userItem label:hover {
+  background: #21a58e;
+}
+
+.userItem input {
+  position: absolute;
+  right: 1em;
+}
+
+
+.userItem{
+  position: relative;
+  border-radius: 1em;
+  
+}
+
+.userName{
+  font-weight: bold;  
+}
+
+.userAvatar{
+  border-radius:100%;
+  border: 1px solid gray;
 }
