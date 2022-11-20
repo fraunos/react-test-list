@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import sortBy from 'lodash/sortBy'
 import UserItem from './UserItem'
+import './Contacts.css'
+import { fetchUsers } from '../services/Users'
 
 function UsersList() {
   const [users, setUsers] = useState([]);
@@ -8,15 +10,14 @@ function UsersList() {
   const [displayedUsers, setDisplayedUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedUsers, setSelectedUsers] = useState(new Set());
+
+
   useEffect(() => {
-    fetch('https://teacode-recruitment-challenge.s3.eu-central-1.amazonaws.com/users.json')
-      .then(async (res) => {
-        // TODO exceptions?
-        const fetchedUsers = await res.json()
-        const sortedUsers = sortBy(fetchedUsers, ['last_name'])
-        setUsers(sortedUsers)
-        setDisplayedUsers(sortedUsers.slice(0, 10))
-      })
+    fetchUsers().then(fetchedUsers => {
+      const sortedUsers = sortBy(fetchedUsers, ['last_name'])
+      setUsers(sortedUsers)
+      setFilteredUsers(sortedUsers)
+    })
   }, [])
 
   useEffect(() => {
@@ -24,11 +25,11 @@ function UsersList() {
   }, [selectedUsers])
 
   useEffect(() => {
-    setDisplayedUsers(filteredUsers.slice(0, 10))
+    setDisplayedUsers(filteredUsers.slice(0, 20))
   }, [filteredUsers])
 
   useEffect(() => {
-    // TODO fuzzy search
+    // TODO fuzzy search??
     setFilteredUsers(users.filter(user => {
       const { first_name, last_name } = user
       const query = search.toLowerCase()
@@ -51,16 +52,31 @@ function UsersList() {
   const handleSearch = ({ target }) => {
     setSearch(target.value)
   }
+  const showMoreUsers = (target) => {
+    const { offsetHeight, scrollTop, scrollHeight } = target
+    // TODO use intersection observer??
+    if (offsetHeight + scrollTop === scrollHeight) {
+      setDisplayedUsers(filteredUsers.slice(0, displayedUsers.length + 10))
+    }
+  }
 
   return (
-    <div className="UsersList">
-      <input type="text" onInput={handleSearch} />
-      {users && displayedUsers.map(user =>
-        <UserItem
-          key={user.id}
-          user={user}
-          checked={selectedUsers.has(user.id)}
-          parentHandler={handleCheckbox} />)}
+
+    <div className="contacts">
+      <div>Contacts</div>
+      <input className="contactsSearch" type="text" onInput={handleSearch} />
+
+      <div
+        className="usersList"
+        onScroll={({ target }) => showMoreUsers(target)}
+      >
+        {users && displayedUsers.map(user =>
+          <UserItem
+            key={user.id}
+            user={user}
+            checked={selectedUsers.has(user.id)}
+            parentHandler={handleCheckbox} />)}
+      </div>
 
     </div>
   )

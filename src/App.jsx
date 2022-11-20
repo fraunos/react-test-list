@@ -1,9 +1,9 @@
 import './App.css'
-import UsersList from './components/UsersList'
+import Contacts from './components/Contacts'
 function App() {
   return (
     <div className="App">
-      <UsersList />
+      <Contacts />
     </div>
   )
 }
